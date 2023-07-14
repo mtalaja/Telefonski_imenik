@@ -59,9 +59,9 @@ namespace CppCLR_WinformsProjekt {
 
 
 	private: Bunifu::Framework::UI::BunifuCustomDataGrid^  bunifuCustomDataGrid1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Ime;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Prezime;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Broj_mobitela;
+
+
+
 
 
 
@@ -84,6 +84,12 @@ namespace CppCLR_WinformsProjekt {
 	private: Bunifu::Framework::UI::BunifuMaterialTextbox^  bunifuMaterialTextboxBrojMobitela;
 	private: Bunifu::Framework::UI::BunifuMaterialTextbox^  bunifuMaterialTextboxPretrazi;
 	private: System::Windows::Forms::Button^  buttonIzbrisi;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Ime;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Prezime;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Broj_mobitela;
+
+
+
 
 
 
@@ -534,7 +540,7 @@ namespace CppCLR_WinformsProjekt {
 
 			if (String::IsNullOrEmpty(this->bunifuMaterialTextboxIme->Text) || String::IsNullOrEmpty(this->bunifuMaterialTextboxPrezime->Text) || String::IsNullOrEmpty(this->bunifuMaterialTextboxBrojMobitela->Text) || System::Text::RegularExpressions::Regex::IsMatch(bunifuMaterialTextboxBrojMobitela->Text, "[^0-9]"))
 			{
-				MessageBox::Show("Ne ispravan unos !!!");
+				MessageBox::Show("Neispravan unos !!!");
 			}
 			else
 			{
@@ -546,7 +552,7 @@ namespace CppCLR_WinformsProjekt {
 
 				if (novi_kontakt == NULL)
 				{
-					MessageBox::Show("Korisnik s tim brojem veæ postoji.");
+					MessageBox::Show("Korisnik s tim telefonskim brojem veæ postoji.");
 				}
 				else
 				{
@@ -558,6 +564,9 @@ namespace CppCLR_WinformsProjekt {
 				this->bunifuMaterialTextboxPrezime->Text = "";
 				this->bunifuMaterialTextboxBrojMobitela->Text = "";								
 			}
+
+			bunifuMaterialTextboxPretrazi->Text = "";
+			bunifuMaterialTextboxPretrazi_Leave(sender, e);
 			
 			Ispis();			
 		}
@@ -568,6 +577,9 @@ namespace CppCLR_WinformsProjekt {
 				bunifuMaterialTextboxPretrazi->Text = "";
 				bunifuMaterialTextboxPretrazi->ForeColor = Color::FromArgb(39,55,77);
 			}
+			this->bunifuMaterialTextboxIme->Text = "";
+			this->bunifuMaterialTextboxPrezime->Text = "";
+			this->bunifuMaterialTextboxBrojMobitela->Text = "";
 		}
 
 		private: System::Void bunifuMaterialTextboxPretrazi_Leave(System::Object^  sender, System::EventArgs^  e) {
@@ -632,12 +644,23 @@ namespace CppCLR_WinformsProjekt {
 		
 		private: System::Void bunifuCustomDataGrid1_CellClick(System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e) {
 
-			DataGridViewRow^ row = bunifuCustomDataGrid1->Rows[e->RowIndex];			
-			
-			bunifuMaterialTextboxIme->Text = row->Cells[0]->Value->ToString();
-			bunifuMaterialTextboxPrezime->Text = row->Cells[1]->Value->ToString();
-			bunifuMaterialTextboxBrojMobitela->Text = row->Cells[2]->Value->ToString();
+			if (e->RowIndex >= 0)
+			{
+				DataGridViewRow^ row = bunifuCustomDataGrid1->Rows[e->RowIndex];
 
+				bunifuMaterialTextboxIme->Text = row->Cells[0]->Value->ToString();
+				bunifuMaterialTextboxPrezime->Text = row->Cells[1]->Value->ToString();
+				bunifuMaterialTextboxBrojMobitela->Text = row->Cells[2]->Value->ToString();
+			}
+			else
+			{
+				this->bunifuMaterialTextboxIme->Text = "";
+				this->bunifuMaterialTextboxPrezime->Text = "";
+				this->bunifuMaterialTextboxBrojMobitela->Text = "";
+			}
+
+			bunifuMaterialTextboxPretrazi->Text = "";
+			bunifuMaterialTextboxPretrazi_Leave(sender, e);
 		}
 		
 		private: System::Void buttonIzbrisi_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -661,7 +684,7 @@ namespace CppCLR_WinformsProjekt {
 				{
 					if (ime == temp_glava->ime && prezime == temp_glava->prezime && broj == temp_glava->broj_mobitela)
 					{
-						if (MessageBox::Show("Jeste li sigurni ?","Imenik", MessageBoxButtons::YesNo,MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes)
+						if (MessageBox::Show("Jeste li sigurni ?","Telefonski imenik", MessageBoxButtons::YesNo,MessageBoxIcon::Question) == System::Windows::Forms::DialogResult::Yes)
 						{
 							pronadeni = temp_glava;
 
@@ -695,13 +718,16 @@ namespace CppCLR_WinformsProjekt {
 				}
 				else if(izbrisan == true)
 				{
-					MessageBox::Show("Uspiješno izbrisan.");
+					MessageBox::Show("Kontakt uspješno izbrisan.");
 				}
 			}
 
 			this->bunifuMaterialTextboxIme->Text = "";
 			this->bunifuMaterialTextboxPrezime->Text = "";
 			this->bunifuMaterialTextboxBrojMobitela->Text = "";
+
+			bunifuMaterialTextboxPretrazi->Text = "";
+			bunifuMaterialTextboxPretrazi_Leave(sender,e);
 
 			Ispis();
 			
@@ -720,6 +746,8 @@ namespace CppCLR_WinformsProjekt {
 				glava = temp;
 			}
 		}
+		
+
 };
 };
 
